@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tidyline – A simpler way to work (Concept)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6F7FB;--ink:#161B33;--mute:#5B6280;--blue:#3B4BF5;--navy:#10143A;--mint:#D9F3E6;--line:#DDE0EE}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:Manrope,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.wrap{max-width:1080px;margin:auto;padding:0 24px}
+header.top{position:sticky;top:0;z-index:10;background:rgba(246,247,251,.85);backdrop-filter:blur(10px);transition:box-shadow .2s}
+header.top.s{box-shadow:0 1px 0 var(--line)}
+nav{display:flex;justify-content:space-between;align-items:center;height:68px}
+nav .l a{margin-left:26px;text-decoration:none;color:var(--mute);font-weight:600}
+nav .l a:hover{color:var(--ink)}
+.logo{font-weight:800;font-size:1.3rem;text-decoration:none;display:flex;align-items:center;gap:8px}
+.logo i{width:22px;height:22px;border-radius:7px;background:var(--blue);display:block;box-shadow:inset 0 -8px 0 rgba(255,255,255,.28)}
+.btn{display:inline-block;background:var(--blue);color:#fff;padding:12px 22px;border-radius:10px;font:inherit;font-weight:600;text-decoration:none;border:0;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px var(--blue)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center;padding:72px 0 88px}
+h1{font-size:clamp(2.4rem,5vw,3.9rem);line-height:1.05;font-weight:800;letter-spacing:-.035em}
+.hero p{color:var(--mute);margin:20px 0 28px;max-width:46ch;font-size:1.1rem}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.proof{margin-top:28px;color:var(--mute);font-size:.92rem}
+.board{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:0 30px 70px -35px rgba(59,75,245,.55)}
+.board h2{font-size:1rem;display:flex;justify-content:space-between}
+.board h2 span{color:var(--blue)}
+.bar{height:8px;background:var(--line);border-radius:8px;margin:12px 0 14px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--blue);transition:width .4s}
+.task{display:flex;gap:12px;align-items:center;padding:11px 8px;border-radius:10px;cursor:pointer}
+.task:hover{background:var(--bg)}
+.task input{width:20px;height:20px;accent-color:var(--blue)}
+.task:has(input:checked) b{text-decoration:line-through;color:var(--mute)}
+.add{display:flex;gap:8px;margin-top:10px}
+.add input{flex:1;font:inherit;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px}
+.add button{padding:10px 16px}
+.done{display:none;margin-top:12px;background:var(--mint);padding:10px 14px;border-radius:10px;font-weight:600}
+section{padding:72px 0}
+h2.t{font-size:clamp(1.7rem,3vw,2.4rem);letter-spacing:-.02em;margin-bottom:28px;max-width:22ch;line-height:1.15}
+.tabs{display:flex;gap:6px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:5px;width:max-content;max-width:100%;flex-wrap:wrap;margin-bottom:28px}
+.tabs button{font:inherit;font-weight:600;border:0;background:none;padding:9px 18px;border-radius:8px;cursor:pointer;color:var(--mute)}
+.tabs button[aria-selected=true]{background:var(--navy);color:#fff}
+.panel{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;min-height:240px}
+.panel h3{font-size:1.5rem;margin-bottom:10px}
+.panel p{color:var(--mute)}
+.panel ul{margin:14px 0 0 18px;color:var(--mute)}
+.vis{background:var(--navy);border-radius:18px;padding:28px;color:#fff;min-height:220px;display:grid;gap:10px;align-content:center}
+.vis div{background:rgba(255,255,255,.1);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between}
+.vis div b{color:#9DA8FF}
+.dark{background:var(--navy);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;text-align:left}
+.stats b{font-size:3rem;font-weight:800;display:block;line-height:1.1}
+.stats span{color:#B7BCE0}
+.sw{display:flex;align-items:center;gap:12px;margin-bottom:28px;font-weight:600}
+.sw button{width:52px;height:30px;border-radius:30px;border:0;background:var(--line);position:relative;cursor:pointer;transition:background .2s}
+.sw button::after{content:"";position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s}
+.sw button[aria-pressed=true]{background:var(--blue)}
+.sw button[aria-pressed=true]::after{transform:translateX(22px)}
+.sw small{background:var(--mint);padding:3px 10px;border-radius:20px}
+.price{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:740px}
+.plan{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px}
+.plan.pro{border:2px solid var(--blue)}
+.plan .n{font-size:2.4rem;font-weight:800}
+.plan .n small{font-size:.95rem;font-weight:600;color:var(--mute)}
+.plan ul{margin:14px 0 22px 18px;color:var(--mute)}
+details{border-bottom:1px solid var(--line);padding:18px 0;max-width:720px}
+summary{font-weight:700;cursor:pointer;list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--blue);transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--mute);margin-top:10px}
+.cta{background:var(--blue);color:#fff;border-radius:24px;padding:52px;display:flex;justify-content:space-between;gap:24px;align-items:center;flex-wrap:wrap}
+.cta h2{font-size:1.9rem;max-width:20ch;line-height:1.2}
+.cta .btn{background:#fff;color:var(--blue)}
+footer{padding:36px 0;color:var(--mute);font-size:.9rem}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s}
+.rv.in{opacity:1;transform:none}
+body{overflow-x:clip}
+.hero{position:relative;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:-70px -50vw 0;z-index:-1;background:radial-gradient(520px 320px at 78% 30%,rgba(59,75,245,.22),transparent 70%),radial-gradient(420px 260px at 12% 0,rgba(124,92,255,.16),transparent 70%),linear-gradient(var(--line) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/48px 48px;-webkit-mask-image:linear-gradient(#000 45%,transparent);mask-image:linear-gradient(#000 45%,transparent)}
+.stage{perspective:1500px;position:relative}
+.scene{position:relative;transform-style:preserve-3d;transform:rotateX(var(--rx,14deg)) rotateY(var(--ry,-16deg));transition:transform .12s linear;will-change:transform}
+.chip{position:absolute;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 16px;font-weight:700;font-size:.9rem;box-shadow:0 22px 40px -18px rgba(22,27,51,.5);display:flex;gap:10px;align-items:center;white-space:nowrap}
+.chip i{width:10px;height:10px;border-radius:50%;background:#2bb673}
+.c1{top:-22px;right:-26px;transform:translateZ(90px)}
+.c2{bottom:70px;left:-44px;transform:translateZ(130px)}
+.c3{bottom:-24px;right:34px;transform:translateZ(60px)}
+.vis{transform:perspective(900px) rotateY(-7deg);transition:transform .3s}
+.vis:hover{transform:perspective(900px) rotateY(0)}
+.dark{background:radial-gradient(600px 280px at 15% 0,rgba(59,75,245,.55),transparent 70%),radial-gradient(500px 260px at 95% 100%,rgba(124,92,255,.4),transparent 70%),var(--navy)}
+@media(max-width:800px){.chip{display:none}.scene{transform:none!important}}
+@media(max-width:800px){.hero,.panel,.price,.stats{grid-template-columns:1fr}.hero{padding:40px 0}nav .l a:not(.btn){display:none}.cta{padding:32px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<header class="top" id="top"><div class="wrap"><nav>
+<a class="logo" href="#"><i></i>Tidyline</a>
+<div class="l"><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a class="btn" href="#pricing" style="color:#fff;margin-left:26px">Start free</a></div>
+</nav></div></header>
+
+<main class="wrap">
+<div class="hero">
+<div>
+<h1>A simpler way to work.</h1>
+<p>Tidyline puts your team's tasks, deadlines, and files on one page, so everyone knows what to do next.</p>
+<div class="row"><a class="btn" href="#pricing">Start free</a><a class="btn ghost" href="#features">See how it works</a></div>
+<p class="proof">Free for teams up to 5 people. No credit card needed.</p>
+</div>
+<div class="stage" id="stage"><div class="scene"><div class="chip c1"><i></i>Due tomorrow</div><div class="chip c2"><i></i>3 teammates online</div><div class="chip c3"><i></i>Synced just now</div>
+<div class="board">
+<h2>This week <span id="count"></span></h2>
+<div class="bar"><i id="fill"></i></div>
+<div id="tasks"></div>
+<form class="add" id="add"><input id="new" placeholder="Add a task and press Enter" aria-label="New task"><button class="btn" type="submit">Add</button></form>
+<div class="done" id="done" role="status">All done. Nice work, team.</div>
+</div></div></div>
+</div>
+</main>
+
+<section id="features"><div class="wrap">
+<h2 class="t rv">Everything your team needs, nothing it doesn't.</h2>
+<div class="tabs" role="tablist" id="ft"></div>
+<div class="panel" id="fp" aria-live="polite"></div>
+</div></section>
+
+<section class="dark"><div class="wrap stats rv">
+<div><b data-n="12400">0</b><span>teams plan their week here</span></div>
+<div><b data-n="38">0</b><span>percent fewer status meetings</span></div>
+<div><b data-n="4">0</b><span>hours saved per person, each week</span></div>
+</div></section>
+
+<section id="pricing"><div class="wrap">
+<h2 class="t rv">Simple pricing.</h2>
+<div class="sw"><span>Monthly</span><button id="bill" aria-pressed="false" aria-label="Switch to yearly billing"></button><span>Yearly</span><small>Save 25%</small></div>
+<div class="price">
+<div class="plan"><h3>Free</h3><div class="n">$0</div><ul><li>Up to 5 people</li><li>Unlimited tasks</li><li>1 GB of files</li></ul><a class="btn ghost" href="#">Start free</a></div>
+<div class="plan pro"><h3>Team</h3><div class="n"><span id="pr">$8</span> <small>per person / month</small></div><ul><li>Unlimited people</li><li>Reminders and reports</li><li>100 GB of files</li></ul><a class="btn" href="#">Try Team for 14 days</a></div>
+</div>
+</div></section>
+
+<section id="faq"><div class="wrap">
+<h2 class="t">Questions, answered.</h2>
+<details><summary>Can I try Tidyline before paying?</summary><p>Yes. The Free plan has no time limit, and Team comes with a 14-day trial.</p></details>
+<details><summary>Can I import tasks from another tool?</summary><p>You can import tasks from a CSV file in a few clicks.</p></details>
+<details><summary>Can I cancel any time?</summary><p>Yes. You can cancel from your settings, and your data stays available for 30 days.</p></details>
+</div></section>
+
+<section><div class="wrap"><div class="cta rv"><h2>Get your team on the same page today.</h2><a class="btn" href="#">Start free</a></div></div></section>
+<div class="wrap"><footer>Tidyline is a concept project made for a portfolio. It is not a real product.</footer></div>
+
+<script>
+const $=s=>document.querySelector(s);
+/* tasks */
+let tasks=[["Send the launch brief",0],["Review design with Sara",0],["Approve the Q4 budget",0],["Book the team offsite",0]];
+function draw(){
+ $('#tasks').innerHTML=tasks.map((t,i)=>`<label class="task"><input type="checkbox" data-i="${i}" ${t[1]?'checked':''}><b>${t[0].replace(/</g,'&lt;')}</b></label>`).join('');
+ const n=tasks.filter(t=>t[1]).length;
+ $('#fill').style.width=(tasks.length?n/tasks.length*100:0)+'%';
+ $('#count').textContent=n+' of '+tasks.length+' done';
+ $('#done').style.display=n&&n===tasks.length?'block':'none';
+}
+$('#tasks').addEventListener('change',e=>{tasks[e.target.dataset.i][1]=e.target.checked?1:0;draw()});
+$('#add').addEventListener('submit',e=>{e.preventDefault();const v=$('#new').value.trim();if(v){tasks.push([v,0]);$('#new').value='';draw()}});
+draw();
+/* feature tabs */
+const F=[
+ ["Tasks","One shared list","Add tasks, set owners, and pick due dates. Everyone sees the same list.",["Assign tasks to people","Set priorities","Filter by owner or date"],[["Write launch brief","Today"],["Design review","Tomorrow"],["Q4 budget","Friday"]]],
+ ["Deadlines","Clear deadlines","Tidyline reminds people the day before something is due, not after.",["Daily summary email","Overdue alerts","Calendar sync"],[["Reminder sent","9:00"],["Due tomorrow","3 tasks"],["Overdue","0"]]],
+ ["Files","Files in context","Attach documents to the task they belong to, so nobody has to search for them.",["Drag and drop uploads","Version history","Share with clients"],[["brief-v3.pdf","2 MB"],["budget.xlsx","480 KB"],["logo.svg","12 KB"]]]];
+$('#ft').innerHTML=F.map((f,i)=>`<button role="tab" aria-selected="${i==0}" data-i="${i}">${f[0]}</button>`).join('');
+function tab(i){const f=F[i];
+ $('#fp').innerHTML=`<div><h3>${f[1]}</h3><p>${f[2]}</p><ul>${f[3].map(x=>'<li>'+x+'</li>').join('')}</ul></div><div class="vis">${f[4].map(r=>`<div><span>${r[0]}</span><b>${r[1]}</b></div>`).join('')}</div>`;
+ document.querySelectorAll('#ft button').forEach(b=>b.setAttribute('aria-selected',b.dataset.i==i))}
+$('#ft').addEventListener('click',e=>{if(e.target.dataset.i)tab(e.target.dataset.i)});tab(0);
+/* pricing */
+$('#bill').addEventListener('click',e=>{const on=e.target.getAttribute('aria-pressed')!=='true';e.target.setAttribute('aria-pressed',on);$('#pr').textContent=on?'$6':'$8'});
+/* header + reveal + counters */
+addEventListener('scroll',()=>$('#top').classList.toggle('s',scrollY>8));
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');
+ e.target.querySelectorAll('[data-n]').forEach(c=>{const to=+c.dataset.n,t0=performance.now();
+  (function s(t){const p=Math.min((t-t0)/1200,1);c.textContent=Math.round(to*p).toLocaleString();if(p<1)requestAnimationFrame(s)})(t0)});
+ io.unobserve(e.target)}),{threshold:.3});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* 3D tilt: pointer + scroll */
+const st=$('#stage');let px=0,py=0;
+function tilt(){const s=Math.min(scrollY,500);st.style.setProperty('--rx',(Math.max(0,14-s*.03)-py*10)+'deg');st.style.setProperty('--ry',(-16+s*.032+px*14)+'deg')}
+addEventListener('pointermove',e=>{px=e.clientX/innerWidth-.5;py=e.clientY/innerHeight-.5;tilt()});
+addEventListener('scroll',tilt,{passive:true});tilt();
+</script>
+</body>
+</html>
