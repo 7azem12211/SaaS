@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tidyline Case Study – Designing a landing page that explains itself</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6F7FB;--ink:#161B33;--mute:#5B6280;--blue:#3B4BF5;--navy:#10143A;--mint:#D9F3E6;--line:#DDE0EE}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font-family:Manrope,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;overflow-x:clip}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+#prog{position:fixed;top:0;left:0;height:4px;width:0;background:var(--blue);z-index:20}
+.wrap{max-width:1040px;margin:auto;padding:0 24px}
+.top{display:flex;justify-content:space-between;align-items:center;height:68px}
+.top a{text-decoration:none;font-weight:600}
+.btn{display:inline-block;background:var(--blue);color:#fff!important;padding:12px 22px;border-radius:10px;font-weight:600;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px var(--blue)}
+.btn.ghost{background:transparent;color:var(--ink)!important;border:1px solid var(--line)}
+.hero{position:relative;isolation:isolate;padding:56px 0 64px}
+.hero::before{content:"";position:absolute;inset:-70px -50vw 0;z-index:-1;background:radial-gradient(520px 300px at 80% 20%,rgba(59,75,245,.2),transparent 70%),linear-gradient(var(--line) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/48px 48px;-webkit-mask-image:linear-gradient(#000 40%,transparent);mask-image:linear-gradient(#000 40%,transparent)}
+.tag{display:inline-block;background:var(--mint);padding:4px 14px;border-radius:99px;font-weight:600;font-size:.88rem;margin-bottom:20px}
+h1{font-size:clamp(2.2rem,5vw,3.8rem);line-height:1.08;font-weight:800;letter-spacing:-.03em;max-width:20ch}
+.lead{font-size:1.2rem;color:var(--mute);max-width:56ch;margin:20px 0 28px}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;margin-top:44px}
+.meta small{display:block;color:var(--mute);font-size:.82rem}
+.meta b{font-weight:600}
+.layout{display:grid;grid-template-columns:200px 1fr;gap:56px;padding:40px 0 80px}
+aside nav{position:sticky;top:88px;display:grid;gap:4px;border-left:2px solid var(--line)}
+aside a{padding:6px 16px;margin-left:-2px;border-left:2px solid transparent;text-decoration:none;color:var(--mute);font-weight:600;font-size:.94rem}
+aside a.on{color:var(--blue);border-color:var(--blue)}
+article section{margin-bottom:64px}
+h2{font-size:clamp(1.6rem,3vw,2.1rem);letter-spacing:-.02em;line-height:1.2;margin-bottom:16px}
+h3{margin-bottom:6px}
+p+p{margin-top:14px}
+article p,article li{color:#3a4062}
+.note{background:var(--mint);border-radius:12px;padding:14px 18px;font-size:.95rem;margin-bottom:28px;color:var(--ink)}
+.goals{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.goal{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px}
+.goal b{color:var(--blue);font-size:1.5rem;display:block;line-height:1.2}
+.steps{list-style:none;padding:0;counter-reset:s;display:grid;gap:18px;margin-top:16px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:16px}
+.steps li::before{content:counter(s);width:44px;height:44px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800}
+.steps b{color:var(--ink)}
+.tabs{display:flex;gap:6px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:5px;width:max-content;max-width:100%;flex-wrap:wrap;margin:18px 0}
+.tabs button{font:inherit;font-weight:600;border:0;background:none;padding:9px 16px;border-radius:8px;cursor:pointer;color:var(--mute)}
+.tabs button[aria-selected=true]{background:var(--navy);color:#fff}
+.dec{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px;min-height:200px}
+.dec h3{font-size:1.25rem}
+.sw{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}
+.sw button{font:inherit;border:1px solid var(--line);background:#fff;border-radius:14px;padding:0;cursor:pointer;overflow:hidden;width:120px;text-align:left;transition:transform .15s}
+.sw button:hover{transform:translateY(-3px)}
+.sw i{display:block;height:64px}
+.sw span{display:block;padding:8px 12px;font-size:.85rem;font-weight:600}
+.sw small{display:block;font-weight:400;color:var(--mute)}
+.spec{background:var(--navy);color:#fff;border-radius:16px;padding:26px;display:grid;gap:4px}
+.spec span{color:#9DA8FF;font-size:.85rem}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chips span{background:#fff;border:1px solid var(--line);border-radius:99px;padding:5px 14px;font-weight:600;font-size:.9rem}
+ul.l{margin:12px 0 0 20px}
+ul.l li{margin-bottom:8px}
+.cta{background:var(--blue);color:#fff;border-radius:24px;padding:44px;display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}
+.cta h2{margin:0;max-width:20ch;color:#fff}
+.cta .btn{background:#fff;color:var(--blue)!important}
+footer{padding:32px 0;color:var(--mute);font-size:.9rem;border-top:1px solid var(--line)}
+@media(max-width:860px){.layout{grid-template-columns:1fr}aside{display:none}.meta{grid-template-columns:1fr 1fr}.goals{grid-template-columns:1fr}.cta{padding:30px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<div class="wrap">
+<div class="top"><a href="#">&larr; Back to portfolio</a><a class="btn" href="index.html">View live demo</a></div>
+
+<header class="hero">
+<span class="tag">Concept project · Case study</span>
+<h1>Tidyline: a landing page that explains itself.</h1>
+<p class="lead">How I designed and built a SaaS landing page where a visitor understands the product, tries it, and finds the price in a single scroll.</p>
+<div class="row"><a class="btn" href="index.html">View live demo</a><a class="btn ghost" href="#process">Jump to the process</a></div>
+<div class="meta">
+<div><small>Role</small><b>Design and development</b></div>
+<div><small>Type</small><b>Self-initiated concept</b></div>
+<div><small>Stack</small><b>HTML, CSS, JavaScript</b></div>
+<div><small>Focus</small><b>Clarity, interaction, responsive</b></div>
+</div>
+</header>
+
+<div class="layout">
+<aside><nav id="toc">
+<a href="#overview">Overview</a><a href="#goals">Goals</a><a href="#process">Process</a><a href="#design">Design decisions</a><a href="#visual">Visual language</a><a href="#build">Build and access</a><a href="#next">What's next</a>
+</nav></aside>
+
+<article>
+<section id="overview">
+<h2>Overview</h2>
+<div class="note">Tidyline is a fictional product I invented for my portfolio. There are no real users or analytics behind it, so this case study is about the decisions I made, not measured results.</div>
+<p>Tidyline is an imagined task tool for small teams. The brief I gave myself was simple: build the landing page I would want to land on, one that tells me what the product is without making me read a feature list.</p>
+<p>Many SaaS pages bury the product under buzzwords. I wanted the opposite: a short promise, something to click right away, and a clear next step.</p>
+</section>
+
+<section id="goals">
+<h2>Goals</h2>
+<p>I wrote four goals before drawing anything, and checked every later decision against them.</p>
+<div class="goals">
+<div class="goal"><b>Clear in 5 seconds</b>One headline and one sentence say what Tidyline does.</div>
+<div class="goal"><b>Show, don't tell</b>A working task board lets visitors feel the product at once.</div>
+<div class="goal"><b>Easy pricing</b>Two plans, plain language, and a billing switch.</div>
+<div class="goal"><b>Works for everyone</b>Responsive, keyboard friendly, and calm for people who prefer less motion.</div>
+</div>
+<p style="margin-top:20px"><b>Assumed audience:</b> team leads in groups of 5 to 20 who are tired of tools with too many features. This is an assumption, not research.</p>
+</section>
+
+<section id="process">
+<h2>Process</h2>
+<ol class="steps">
+<li><div><b>Words first.</b> I wrote the headline, the supporting sentence, and three benefits before opening a design tool. If the message is weak, no layout can save it.</div></li>
+<li><div><b>Order the page by visitor questions.</b> What is it? How does it help? Can I see it? How much? What if I have doubts? That gave me the hero, features, numbers, pricing, FAQ, and a final call to action.</div></li>
+<li><div><b>Pick a small visual system.</b> One typeface, one action color, one dark color, one soft success color. Fewer choices made the page feel more confident.</div></li>
+<li><div><b>Build in plain code.</b> No frameworks or libraries, so the page loads fast and every line is mine to explain.</div></li>
+<li><div><b>Add depth.</b> After the basics worked, I layered in interaction and subtle 3D, then tested how much was too much.</div></li>
+</ol>
+</section>
+
+<section id="design">
+<h2>Design decisions</h2>
+<p>Four choices shaped the page the most. Pick one to see the reasoning.</p>
+<div class="tabs" role="tablist" id="dt"></div>
+<div class="dec" id="dp" aria-live="polite"></div>
+</section>
+
+<section id="visual">
+<h2>Visual language</h2>
+<p>Click a color to copy its code.</p>
+<div class="sw" id="sw"></div>
+<div class="spec"><span>Manrope · 800 for headlines, 600 for UI, 400 for body</span><b style="font-size:2rem;font-weight:800;letter-spacing:-.03em">A simpler way to work.</b><span style="color:#B7BCE0">Friendly and geometric, and it stays readable at small sizes.</span></div>
+</section>
+
+<section id="build">
+<h2>Build and accessibility</h2>
+<p>The page is one dependency-free file, built with:</p>
+<div class="chips"><span>HTML5</span><span>CSS custom properties</span><span>CSS Grid</span><span>Vanilla JavaScript</span><span>IntersectionObserver</span></div>
+<ul class="l">
+<li><b>Responsive:</b> the layout collapses to a single column on small screens, and the 3D tilt is switched off there.</li>
+<li><b>Semantic controls:</b> the billing switch uses a labeled button with <code>aria-pressed</code>, tabs report their selected state, and the FAQ uses native <code>details</code> elements.</li>
+<li><b>Visible focus:</b> every interactive element shows a clear focus ring.</li>
+<li><b>Motion:</b> transitions are removed for people who prefer reduced motion.</li>
+</ul>
+</section>
+
+<section id="next">
+<h2>What I would do next</h2>
+<p>A concept is never finished. These are the honest gaps I would close first:</p>
+<ul class="l">
+<li>Test the page with five real people and watch where they hesitate.</li>
+<li>Measure performance and accessibility with proper tools instead of assuming.</li>
+<li>Add arrow-key navigation to the tabs, which currently work by click and Tab key only.</li>
+<li>Turn off the pointer-driven tilt completely when reduced motion is on, not just the transitions.</li>
+<li>Replace the placeholder mockups with real product screens.</li>
+</ul>
+</section>
+
+<div class="cta"><h2>Want a landing page like this?</h2><a class="btn" href="#">Let's talk</a></div>
+</article>
+</div>
+</div>
+<div class="wrap"><footer>Tidyline is a concept project made for a portfolio. It is not a real product.</footer></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const D=[
+["Live hero board","A working task list instead of a screenshot","Visitors can tick tasks, add their own, and watch the progress bar fill. It shows what using the product feels like in about ten seconds, with no sign-up. I kept it to four tasks so it never looks like homework.",["Why: proof beats claims","Trade-off: more code than an image"]],
+["3D depth","A dashboard that tilts with your pointer and the scroll","The board and its floating chips sit at different depths using CSS perspective. The tilt flattens as you scroll down so the page settles into a normal layout. I kept the angles small so the text stays easy to read.",["Why: a premium feel without a heavy library","Trade-off: it needs restraint, so it is switched off on small screens"]],
+["Pricing switch","Monthly or yearly, one tap","Two plans are enough for a small-team tool. The switch updates the price instantly and a small label points out the yearly saving, so no one has to do the math.",["Why: remove doubt right before the decision","Trade-off: fewer plans means less flexibility"]],
+["Feature tabs","Three features, one panel","Instead of a long grid, tabs show one feature at a time with a small preview beside it. Each tab has a short story, three bullets, and a mock of what you would see.",["Why: keeps the page short","Trade-off: hidden content gets fewer views, so the three tabs are ordered by importance"]]];
+$('#dt').innerHTML=D.map((d,i)=>`<button role="tab" aria-selected="${i==0}" data-i="${i}">${d[0]}</button>`).join('');
+function tab(i){const d=D[i];$('#dp').innerHTML=`<h3>${d[1]}</h3><p>${d[2]}</p><ul class="l">${d[3].map(x=>'<li>'+x+'</li>').join('')}</ul>`;
+ document.querySelectorAll('#dt button').forEach(b=>b.setAttribute('aria-selected',b.dataset.i==i))}
+$('#dt').addEventListener('click',e=>{if(e.target.dataset.i)tab(e.target.dataset.i)});tab(0);
+
+const C=[["Action blue","#3B4BF5"],["Deep navy","#10143A"],["Success mint","#D9F3E6"],["Ink","#161B33"],["Page grey","#F6F7FB"]];
+$('#sw').innerHTML=C.map(c=>`<button type="button" data-c="${c[1]}" aria-label="Copy ${c[0]} ${c[1]}"><i style="background:${c[1]}"></i><span>${c[0]}<small>${c[1]}</small></span></button>`).join('');
+$('#sw').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const s=b.querySelector('small'),old=s.textContent;
+ (navigator.clipboard?navigator.clipboard.writeText(b.dataset.c):Promise.reject()).then(()=>{s.textContent='Copied'},()=>{s.textContent=b.dataset.c});setTimeout(()=>s.textContent=old,1200)});
+
+addEventListener('scroll',()=>{const h=document.documentElement;$('#prog').style.width=(scrollY/(h.scrollHeight-innerHeight)*100)+'%'},{passive:true});
+const links=[...document.querySelectorAll('#toc a')];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-30% 0px -60% 0px'});
+document.querySelectorAll('article section').forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
